@@ -6,23 +6,10 @@ using NadekoBot.Classes;
 using NadekoBot.Classes.Help.Commands;
 using NadekoBot.Classes.JSONModels;
 using NadekoBot.Modules.Administration;
-using NadekoBot.Modules.ClashOfClans;
 using NadekoBot.Modules.Conversations;
-using NadekoBot.Modules.CustomReactions;
-using NadekoBot.Modules.Gambling;
-using NadekoBot.Modules.Games;
-using NadekoBot.Modules.Games.Commands;
 using NadekoBot.Modules.Help;
-#if !NADEKO_RELEASE
-using NadekoBot.Modules.Music;
-#endif
-using NadekoBot.Modules.NSFW;
 using NadekoBot.Modules.Permissions;
 using NadekoBot.Modules.Permissions.Classes;
-using NadekoBot.Modules.Pokemon;
-using NadekoBot.Modules.Searches;
-using NadekoBot.Modules.Translator;
-using NadekoBot.Modules.Trello;
 using NadekoBot.Modules.Utility;
 using Newtonsoft.Json;
 using System;
@@ -66,8 +53,6 @@ namespace NadekoBot
             try
             {
                 Config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText("data/config.json"));
-                Config.Quotes = JsonConvert.DeserializeObject<List<Quote>>(File.ReadAllText("data/quotes.json"));
-                Config.PokemonTypes = JsonConvert.DeserializeObject<List<PokemonType>>(File.ReadAllText("data/PokemonTypes.json"));
             }
             catch (Exception ex)
             {
@@ -95,22 +80,9 @@ namespace NadekoBot
                 Console.WriteLine("Token blank. Please enter your bot's token:\n");
                 Creds.Token = Console.ReadLine();
             }
-
-            Console.WriteLine(string.IsNullOrWhiteSpace(Creds.GoogleAPIKey)
-                ? "No google api key found. You will not be able to use music and links won't be shortened."
-                : "Google API key provided.");
-            Console.WriteLine(string.IsNullOrWhiteSpace(Creds.TrelloAppKey)
-                ? "No trello appkey found. You will not be able to use trello commands."
-                : "Trello app key provided.");
             Console.WriteLine(Config.ForwardMessages != true
                 ? "Not forwarding messages."
                 : "Forwarding private messages to owner.");
-            Console.WriteLine(string.IsNullOrWhiteSpace(Creds.SoundCloudClientID)
-                ? "No soundcloud Client ID found. Soundcloud streaming is disabled."
-                : "SoundCloud streaming enabled.");
-            Console.WriteLine(string.IsNullOrWhiteSpace(Creds.OsuAPIKey)
-                ? "No osu! api key found. Song & top score lookups will not work. User lookups still available."
-                : "osu! API key provided.");
 
             BotMention = $"<@{Creds.BotId}>";
 
@@ -166,20 +138,8 @@ namespace NadekoBot
             modules.Add(new UtilityModule(), "Utility", ModuleFilter.None);
             modules.Add(new PermissionModule(), "Permissions", ModuleFilter.None);
             modules.Add(new Conversations(), "Conversations", ModuleFilter.None);
-            modules.Add(new GamblingModule(), "Gambling", ModuleFilter.None);
-            modules.Add(new GamesModule(), "Games", ModuleFilter.None);
-#if !NADEKO_RELEASE
-            modules.Add(new MusicModule(), "Music", ModuleFilter.None);
-#endif
-            modules.Add(new SearchesModule(), "Searches", ModuleFilter.None);
-            modules.Add(new NSFWModule(), "NSFW", ModuleFilter.None);
-            modules.Add(new ClashOfClansModule(), "ClashOfClans", ModuleFilter.None);
-            modules.Add(new PokemonModule(), "Pokegame", ModuleFilter.None);
-            modules.Add(new TranslatorModule(), "Translator", ModuleFilter.None);
-            modules.Add(new CustomReactionsModule(), "Customreactions", ModuleFilter.None);
-            if (!string.IsNullOrWhiteSpace(Creds.TrelloAppKey))
-                modules.Add(new TrelloModule(), "Trello", ModuleFilter.None);
 
+            
             //run the bot
             Client.ExecuteAndWait(async () =>
             {
@@ -280,7 +240,6 @@ namespace NadekoBot
             try
             {
                 if (e.Server != null || e.User.Id == Client.CurrentUser.Id) return;
-                if (PollCommand.ActivePolls.SelectMany(kvp => kvp.Key.Users.Select(u => u.Id)).Contains(e.User.Id)) return;
                 if (ConfigHandler.IsBlackListed(e))
                     return;
 

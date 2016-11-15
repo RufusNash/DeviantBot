@@ -3,7 +3,6 @@ using Discord.Modules;
 using NadekoBot.Classes;
 using NadekoBot.Classes.JSONModels;
 using NadekoBot.Extensions;
-using NadekoBot.Modules.Games.Commands;
 using NadekoBot.Modules.Permissions.Classes;
 using NadekoBot.Modules.Permissions.Commands;
 using System;
@@ -774,10 +773,6 @@ namespace NadekoBot.Modules.Permissions
                             NadekoBot.Config.ServerBlacklist.Add(serverId);
                             await ConfigHandler.SaveConfig().ConfigureAwait(false);
                             //cleanup trivias and typeracing
-                            Modules.Games.Commands.Trivia.TriviaGame trivia;
-                            TriviaCommands.RunningTrivias.TryRemove(serverId, out trivia);
-                            TypingGame typeracer;
-                            SpeedTyping.RunningContests.TryRemove(serverId, out typeracer);
 
                             await e.Channel.SendMessage($"`Sucessfully blacklisted server {server.Name}`").ConfigureAwait(false);
                         }).ConfigureAwait(false);

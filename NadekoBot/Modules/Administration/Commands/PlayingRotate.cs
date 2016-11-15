@@ -1,7 +1,6 @@
 ﻿using Discord.Commands;
 using NadekoBot.Classes;
 using NadekoBot.Classes.JSONModels;
-using NadekoBot.Modules.Music;
 using NadekoBot.Modules.Permissions.Classes;
 using System;
 using System.Collections.Generic;
@@ -21,20 +20,6 @@ namespace NadekoBot.Modules.Administration.Commands
             new Dictionary<string, Func<string>> {
                 {"%servers%", () => NadekoBot.Client.Servers.Count().ToString()},
                 {"%users%", () => NadekoBot.Client.Servers.SelectMany(s => s.Users).Count().ToString()},
-                {"%playing%", () => {
-                        var cnt = MusicModule.MusicPlayers.Count(kvp => kvp.Value.CurrentSong != null);
-                        if (cnt != 1) return cnt.ToString();
-                        try {
-                            var mp = MusicModule.MusicPlayers.FirstOrDefault();
-                            return mp.Value.CurrentSong.SongInfo.Title;
-                        }
-                        catch {
-                            return "No songs";
-                        }
-                    }
-                },
-                {"%queued%", () => MusicModule.MusicPlayers.Sum(kvp => kvp.Value.Playlist.Count).ToString()},
-                {"%trivia%", () => Games.Commands.TriviaCommands.RunningTrivias.Count.ToString()}
             };
 
         private readonly SemaphoreSlim playingPlaceholderLock = new SemaphoreSlim(1, 1);

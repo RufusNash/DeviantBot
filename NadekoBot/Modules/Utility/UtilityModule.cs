@@ -4,7 +4,12 @@ using NadekoBot.Extensions;
 using NadekoBot.Modules.Permissions.Classes;
 using NadekoBot.Modules.Utility.Commands;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NadekoBot.Modules.Utility
@@ -15,6 +20,7 @@ namespace NadekoBot.Modules.Utility
         {
             commands.Add(new Remind(this));
             commands.Add(new InfoCommands(this));
+            commands.Add(new DeviantCommands(this));
         }
 
         public override string Prefix => NadekoBot.Config.CommandPrefixes.Utility;
@@ -160,8 +166,15 @@ namespace NadekoBot.Modules.Utility
                             return;
                         await e.Channel.SendMessage(topic).ConfigureAwait(false);
                     });
+
+                
+
             });
+            
         }
-    }
+        
+  }
+    
+    
 }
 
